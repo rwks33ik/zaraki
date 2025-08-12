@@ -1,13 +1,19 @@
 {
-  "public": [
-    "@VlP_13",
-    "@O_EOB"
-  ],
-  "private": [
-    {
-      "id": "-1002056514578",
-      "title": "تكنولوجيا المعلومات",
-      "invite_link": "https://t.me/+K7P7A40PaOIwNGY0"
-    }
+  "channels": {
+    "public": [
+      "@H_f_f7",
+      "@jo2k2er",
+      "@VIIlTP"
+    ],
+    "private": [
+      {
+        "id": "-1002056514578",
+        "title": "تكنولوجيا المعلومات ⛑️",
+        "invite_link": "https://t.me/+z2D1pBXUnB5iMWU8"
+      }
+    ]
+  },
+  "admins": [
+    "6808883615"
   ]
 }
