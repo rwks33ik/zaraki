@@ -1,7 +1,7 @@
 {
-  "name": "pubg-uc-server",
+  "name": "multi-site-server",
   "version": "1.0.0",
-  "description": "خادم لشحن شدات ببجي",
+  "description": "خادم لمواقع متعددة مع إرسال رسائل إلى بوت التليجرام",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
@@ -16,7 +16,7 @@
   "devDependencies": {
     "nodemon": "^3.0.1"
   },
-  "keywords": ["pubg", "uc", "bot"],
+  "keywords": ["multi-site", "telegram-bot", "express"],
   "author": "Your Name",
   "license": "MIT"
 }
